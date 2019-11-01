@@ -115,7 +115,7 @@ class rotational_pendulum:
             x2_ring = self.y1
             ax1.plot(x1_ring, x2_ring, color='black', linewidth=0.1)
 
-            ax2.scatter(t[i], self.theta[i], lw=0.1, c='orange')
+            ax2.scatter(t[i], self.theta[i], lw=0.01, c='orange')
             ax2.set_xlabel(r'$t$')
             ax2.set_ylabel(r'$\theta$')
             ax2.set_xlim(0, max(t))
