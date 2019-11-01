@@ -36,13 +36,15 @@ R = 0.5
 class rotational_pendulum:
     ''' '''
 
-    def __init__(self, L, omega, A, m, g, R):
-        self.L = L
+    def __init__(self, L1, L2, omega, m1, m2, g, R):
+        self.L1 = L1
+        self.L2 = L2
         self.omega = omega
-        self.A = A
-        self.m = m
+        self.m1 = m1
+        self.m2 = m2
         self.g = g
         self.R = R
+
 
         '''
         Parameters
@@ -62,25 +64,28 @@ class rotational_pendulum:
 
     def derivative(self, y, t, L, omega, A, m, g):
         '''Returns the first derivatives of y'''
-        theta, thetadot = y 
+        theta1, thetadot1, theta2, thetadot2 = y 
 
-        dtheta_dt = thetadot
-        dthetadot_dt = (((R/L) * (omega ** 2)) * np.sin((omega * t) + theta) - (g/L) * np.sin(theta))
-        
-        #(R/L) * omega ** 2 * np.sin(omega * t + theta) - (g/L) * np.sin(theta)
-        
-        
-        #(R * omega)/L *np.cos(theta + omega * t)
-        
-        #((R/L) * omega**2 * np.cos(theta + omega * t) - 
-         #   (g/L) * np.sin(theta))
 
-        return dtheta_dt, dthetadot_dt
+        dtheta_dt1 = thetadot1
+        dtheta_dt2 = thetadot2
+        dthetadot_dt1 = ((m2*g*np.sin(theta2)*np.cos(theta1-theta2) 
+        - m2*np.sin(theta1-theta2)*(L1*thetadot1**2*np.cos(theta1-theta2) 
+        + L2*thetadot2**2) - (m1+m2)*g*np.sin(theta1)) / L1 / (m1 + m2*np.sin(theta1-theta2)**2))
+
+
+        dthetadot_dt2 = (((m1+m2)*(L1*thetadot1**2*np.sin(theta1-theta2) - g*np.sin(theta2) 
+        + g*np.sin(theta1)*np.cos(theta1-theta2)) 
+        + m2*L2*thetadot2**2*np.sin(theta1-theta2)*np.cos(theta1-theta2)) / L2 / 
+        (m1 + m2*np.sin(theta1-theta2)**2))
+
+        return dtheta_dt1, dthetadot_dt1, dtheta_dt2, dthetadot_dt2
 
 
     def differential_equation(self):
         '''Returns a numerical solution to the differential equation'''
-        y = odeint(self.derivative, y0, t, args=(self.L, self.omega, self.A, self.m, self.g))
+        y = odeint(self.derivative, y0, t, args=(self.L1, self.L2, self.m1, 
+        self.m2, self.omega, self.g))
 
         self.theta, self.thetadot = y[:,0], y[:,1]
         self.x1 =  - (R * np.sin(omega * t))
@@ -88,7 +93,8 @@ class rotational_pendulum:
         self.x2 = - L * np.sin(self.theta) - R * np.sin(omega * t)
         self.y2 = - L * np.cos(self.theta) - R * np.cos(omega * t)
 
-        return self.x1, self.x2, self.y1, self.y2, self.theta, self.thetadot
+        return self.x1, self.x2, self.y1, self.y2, self.theta1, self.thetadot1, self.theta2, self.thetadot2
+
 
 
     def generate_plot(self):

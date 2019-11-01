@@ -32,7 +32,6 @@ r = 0.05
 R = 0.5
 
 
-
 class rotational_pendulum:
     ''' '''
 
@@ -67,13 +66,6 @@ class rotational_pendulum:
         dtheta_dt = thetadot
         dthetadot_dt = (((R/L) * (omega ** 2)) * np.sin((omega * t) + theta) - (g/L) * np.sin(theta))
         
-        #(R/L) * omega ** 2 * np.sin(omega * t + theta) - (g/L) * np.sin(theta)
-        
-        
-        #(R * omega)/L *np.cos(theta + omega * t)
-        
-        #((R/L) * omega**2 * np.cos(theta + omega * t) - 
-         #   (g/L) * np.sin(theta))
 
         return dtheta_dt, dthetadot_dt
 
