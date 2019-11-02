@@ -69,11 +69,13 @@ class double_pendulum:
 
         dtheta_dt1 = thetadot1
         dtheta_dt2 = thetadot2
-        dthetadot_dt1 = ((m2*g*np.sin(theta2)*np.cos(theta1-theta2) 
+        dthetadot_dt1 = (A * omega**2 / L * np.cos(omega*t) * np.cos(theta) -
+        ((m2*g*np.sin(theta2)*np.cos(theta1-theta2) 
         - m2*np.sin(theta1-theta2)*(L1*thetadot1**2*np.cos(theta1-theta2) 
         + L2*thetadot2**2) - (m1+m2)*g*np.sin(theta1)) / L1 / (m1 + m2*np.sin(theta1-theta2)**2))
 
-        dthetadot_dt2 = (((m1+m2)*(L1*thetadot1**2*np.sin(theta1-theta2) - g*np.sin(theta2) 
+        dthetadot_dt2 = (A * omega**2 / L * np.cos(omega*t) * np.cos(theta) -
+        (((m1+m2)*(L1*thetadot1**2*np.sin(theta1-theta2) - g*np.sin(theta2) 
         + g*np.sin(theta1)*np.cos(theta1-theta2)) 
         + m2*L2*thetadot2**2*np.sin(theta1-theta2)*np.cos(theta1-theta2)) / L2 / (m1 + m2*np.sin(theta1-theta2)**2))
 
