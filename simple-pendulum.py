@@ -2,6 +2,7 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle
 import matplotlib.animation as animation
+import matplotlib.gridspec as gridspec
 plt.rcParams['animation.ffmpeg_path'] = '/usr/local/bin/ffmpeg'
 import numpy as np
 import scipy
@@ -20,11 +21,11 @@ time_max, dt = 40, 0.001
 t = np.arange(0, time_max + dt, dt)
 
 #------------ initial conditions --------
-y0 = [0.5, 0]
+y0 = [np.pi/2, 0]
 
 #------------ Animation values ----------
 fps = 10
-time_max, dt = 40, 0.01
+time_max, dt = 50, 0.01
 t = np.arange(0, time_max + dt, dt)
 frame_step = int(1/fps/dt)
 
@@ -80,47 +81,88 @@ class simple_pendulum:
     def animate_plot(self):
         '''Animation of the plots and shows'''
         #----------- Set figure -----------
-        fig = plt.figure(figsize=(12, 4.5), dpi=80)
-        ax1 = fig.add_subplot(1,2,1)
-        ax2 = fig.add_subplot(1,2,2)
+        #fig = plt.figure(figsize=(12, 4.5), dpi=80)
+        #ax1 = fig.add_subplot(1,2,1)
+        #ax2 = fig.add_subplot(1,2,2)
+        gs = gridspec.GridSpec(2, 2)
+
+        fig = plt.figure(figsize=(10, 10), dpi=80)
+        ax1 = plt.subplot(gs[0, 0]) # row 0, col 0
+        plt.plot([0,1])
+
+        
+        ax2 = plt.subplot(gs[0, 1]) # row 0, col 1
+        plt.plot([0,1])
+
+        ax3 = plt.subplot(gs[1, :]) # row 1, span all columns
+        plt.plot([0,1])
+
+        ax2.clear()
+        ax3.clear()
+        line1, = ax2.plot(self.x, self.y, '-', color='orange')
+        line2, = ax3.plot(t, self.theta, '-', color='blue')
 
 
         for i in range(0, len(t), frame_step):
 
             ax1.plot([0, self.x[i]], [0, self.y[i]])
-            self.circle1 = Circle((0, 0), r/2, fc='b', zorder=10)
-            self.circle2 = Circle((self.x[i], self.y[i]), r, fc='orange', zorder=10)
+            self.circle0 = Circle((0, 0), r/2, fc='b', zorder=10)
+            self.circle1 = Circle((self.x[i], self.y[i]), r/2, fc='orange', zorder=10)
+            ax1.add_patch(self.circle0)
             ax1.add_patch(self.circle1)
-            ax1.add_patch(self.circle2)
-            ax1.set_xlim(-0.8, 0.8)
-            ax1.set_ylim(-1.1, 0.1)
+            ax1.set_xlabel(r'$x$')
+            ax1.set_ylabel(r'$y$')
+            ax1.set_xlim(-L - 0.1, L + 0.1)
+            ax1.set_ylim(-L - 0.1, L + 0.1)
             ax1.set_aspect('equal', adjustable='box')
 
-            ax2.scatter(t[i], self.theta[i], lw=0.1, c='orange')
-            ax2.set_xlabel(r'$t\;/\mathrm{s}$')
-            ax2.set_ylabel(r'$\theta$')
-            ax2.set_xlim(0, max(t))
-            ax2.set_ylim(min(self.theta) - 0.1, max(self.theta) + 0.1)
+
+            line1.set_xdata(self.x[:i])
+            line1.set_ydata(self.y[:i])
+            ax2.set_xlabel(r'$x$')
+            ax2.set_ylabel(r'$y$')
+            ax2.set_xlim(-L - 0.1, L + 0.1)
+            ax2.set_ylim(-L - 0.1, L + 0.1)
+
+
+            line2.set_xdata(t[:i])
+            line2.set_ydata(self.theta[:i])
+            ax3.set_xlabel(r'$t$')
+            ax3.set_ylabel(r'$\theta$')
+            ax3.set_xlim(0, max(t))
+            ax3.set_ylim(min(self.theta) - 0.1, max(self.theta) + 0.1)
+
             plt.pause(0.01)
             plt.draw_all()
             ax1.clear()  
-
-        return self.circle1, self.circle2
+            
+        return self.circle1
 
     
-    def numerical_graph(self):
-        '''Saves a numerical solution to the diff eq as a plot'''
-        fig = plt.figure(figsize=(8, 6), dpi=80)
-        ax = fig.add_subplot(111)
-        ax.plot(t, self.theta, lw=2, c='orange', alpha=0.7)
+    def graph_output(self):
+        '''Saves various figures'''
+        fig1 = plt.figure(figsize=(8, 6), dpi=600) 
+
+        plt.plot(self.x, self.y, color='blue')
+        plt.xlabel(r'$x$')
+        plt.ylabel(r'$y$')
+        plt.xlim(-L - 0.1, L + 0.1)
+        plt.ylim(-L - 0.1, L + 0.1)
+
+        plt.savefig('./img/simple_pendulum_path.png')
+
+
+        fig2 = plt.figure(figsize=(8, 6), dpi=600)
+
+        plt.plot(t, self.theta, color='blue')
+        plt.xlabel(r'$t$')
+        plt.ylabel(r'$\theta$')
+        plt.xlim(0, max(t))
+        plt.ylim(min(self.theta) - 0.1, max(self.theta) + 0.1)
+
+        plt.savefig('./img/simple_pendulum_angle.png')
         
-        ax.set_xlabel(r'$t\;/\mathrm{s}$')
-        ax.set_ylabel(r'$\theta$')
-        ax.set_xlim(0, time_max)
-        ax.set_ylim(min(self.theta) - 0.1, max(self.theta) + 0.1)
-        ax.legend()
-        plt.savefig('driven-theta.png', dpi=1200)
-        #plt.show()
+
 
     def init(self): 
         '''Set up animation'''
@@ -172,15 +214,11 @@ class simple_pendulum:
         animate.save('pendulum.mp4', writer=writer)
         
 
-
-class other_pendulum:
-    pass
-
-
 #----------- Run -----------
 simple_pendulum = simple_pendulum(L, m, g)
 simple_pendulum.differential_equation()
-simple_pendulum.animate_plot()
+#simple_pendulum.animate_plot()
+simple_pendulum.graph_output()
 #simple_pendulum.numerical_graph()
 #simple_pendulum.init()
 #simple_pendulum.create_animation()

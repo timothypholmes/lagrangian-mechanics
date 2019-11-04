@@ -9,7 +9,7 @@ import time
 
 #------------ variables ----------------
 L = 1        
-omega = 2.5
+omega = 1.5
 A = 0.9   
 m = 1        
 g = 9.81    
