@@ -11,7 +11,6 @@ import time
 
 #------------ variables ----------------
 L = 1        
-omega = 3*np.pi/4
 A = 0.1      
 m = 1        
 g = 9.81    
@@ -19,7 +18,8 @@ g = 9.81
 #------------ time step -----------------
 time_max, dt = 50, 0.01
 t = np.arange(0, time_max + dt, dt)
-
+#omega = np.arange(0, 10,len(t))
+omega = 3.13
 #------------ initial conditions --------
 y0 = [0, 0]
 
@@ -65,7 +65,7 @@ class harmonically_driven_pendulum:
 
         dtheta_dt = thetadot
         dthetadot_dt = (A * omega**2 / L * np.cos(omega*t) * np.cos(theta) -
-            g * np.sin(theta))
+            g/L * np.sin(theta))
 
         return dtheta_dt, dthetadot_dt
 
@@ -81,7 +81,7 @@ class harmonically_driven_pendulum:
         return self.x, self.y, self.theta, self.thetadot
 
 
-    def generate_plot(self):
+    def show_plot(self):
         '''Animation of the plots and shows'''
         #----------- Set figure -----------
         #fig = plt.figure(figsize=(12, 4.5), dpi=80)
@@ -104,29 +104,7 @@ class harmonically_driven_pendulum:
         ax3.clear()
         line1, = ax2.plot(self.x, self.y, '-', color='orange')
         line2, = ax3.plot(t, self.theta, '-', color='orange')
-
-        '''
-        for i in range(0, len(t), frame_step):
-
-            self.x0 = A * np.cos(omega * t[i])
-            ax1.plot([self.x0, self.x0 + self.x[i]], [0, self.y[i]])
-            self.circle1 = Circle((self.x0, 0), r/2, fc='b', zorder=10)
-            self.circle2 = Circle((self.x0 + self.x[i], self.y[i]), r, fc='orange', zorder=10)
-            ax1.add_patch(self.circle1)
-            ax1.add_patch(self.circle2)
-            ax1.set_xlim(-np.max(L)-A, np.max(L)+A)
-            ax1.set_ylim(-np.max(L)-A, np.max(L)+A)
-            ax1.set_aspect('equal', adjustable='box')
-
-            ax2.scatter(t[i], self.theta[i], lw=0.1, c='orange')
-            ax2.set_xlabel(r'$t\;/\mathrm{s}$')
-            ax2.set_ylabel(r'$\theta$')
-            ax2.set_xlim(0, max(t))
-            ax2.set_ylim(min(self.theta) - 0.1, max(self.theta) + 0.1)
-            plt.pause(0.01)
-            plt.draw_all()
-            ax1.clear()  
-        '''
+        
 
         for i in range(0, len(t), frame_step):
 
@@ -138,8 +116,8 @@ class harmonically_driven_pendulum:
             ax1.add_patch(self.circle1)
             ax1.set_xlabel(r'$x$')
             ax1.set_ylabel(r'$y$')
-            ax1.set_xlim(-2.1, 2.1)
-            ax1.set_ylim(-2.1, 2.1)
+            ax1.set_xlim(-L - 0.1, L + 0.1)
+            ax1.set_ylim(-L - 0.1, L + 0.1)
             ax1.set_aspect('equal', adjustable='box')
 
             line1.set_xdata(A * np.cos(omega * t[:i]) + self.x[:i])
@@ -162,6 +140,94 @@ class harmonically_driven_pendulum:
         
 
         return self.x0, self.circle0, self.circle1
+
+    def show_plot_with_omega(self):
+        '''Animation of the plots and shows'''
+        #----------- Set figure -----------
+        #fig = plt.figure(figsize=(12, 4.5), dpi=80)
+        #ax1 = fig.add_subplot(1,2,1)
+        #ax2 = fig.add_subplot(1,2,2)
+        gs = gridspec.GridSpec(2, 2)
+
+        fig = plt.figure(figsize=(10, 10), dpi=80)
+        ax1 = plt.subplot(gs[0, 0]) # row 0, col 0
+        plt.plot([0,1])
+
+        ax2 = plt.subplot(gs[0, 1]) # row 0, col 1
+        plt.plot([0,1])
+
+        ax3 = plt.subplot(gs[1, 0]) # row 1, span all columns
+        plt.plot([0,1])
+
+        ax4 = plt.subplot(gs[1, 1]) # row 1, span all columns
+        plt.plot([0,1])
+
+
+        ax2.clear()
+        ax3.clear()
+        ax4.clear()
+        line1, = ax2.plot(self.x, self.y, '-', color='orange')
+        line2, = ax3.plot(t, self.theta, '-', color='orange')
+        line3, = ax4.plot(A*omega**2, omega)
+
+        for i in range(0, len(t), frame_step):
+
+            self.x0 = A * np.cos(omega * t[i])
+            ax1.plot([self.x0, self.x0 + self.x[i]], [0, self.y[i]])
+            self.circle0 = Circle((self.x0, 0), r/2, fc='b', zorder=10)
+            self.circle1 = Circle((self.x0 + self.x[i], self.y[i]), r/2, fc='orange', zorder=10)
+            ax1.add_patch(self.circle0)
+            ax1.add_patch(self.circle1)
+            ax1.set_xlabel(r'$x$')
+            ax1.set_ylabel(r'$y$')
+            ax1.set_xlim(-L - 0.1, L + 0.1)
+            ax1.set_ylim(-L - 0.1, L + 0.1)
+            ax1.set_aspect('equal', adjustable='box')
+
+            line1.set_xdata(A * np.cos(omega[:i] * t[:i]) + self.x[:i])
+            line1.set_ydata(self.y[:i])
+            ax2.set_xlabel(r'$x$')
+            ax2.set_ylabel(r'$y$')
+            ax2.set_xlim(-L - 0.1, L + 0.1)
+            ax2.set_ylim(-L - 0.1, L + 0.1)
+            
+            line2.set_xdata(t[:i])
+            line2.set_ydata(self.theta[:i])
+            ax3.set_xlabel(r'$t$')
+            ax3.set_ylabel(r'$\theta$')
+            ax3.set_xlim(0, max(t))
+            ax3.set_ylim(min(self.theta) - 0.3, max(self.theta) + 0.3)
+
+            line3.set_xdata(omega[:i])
+            line3.set_ydata(A*omega[:i]**2)
+            ax4.set_xlabel(r'$Omega$')
+            ax4.set_ylabel(r'$Amplitude$')
+           
+            #ax4.set_xlim(0, max(omega))
+            #ax4.set_ylim(min(self.theta) - 0.3, max(self.theta) + 0.3)
+
+            plt.pause(0.01)
+            plt.draw_all()
+            ax1.clear()  
+        
+
+        return self.x0, self.circle0, self.circle1
+
+    def omega_output(self):
+
+        time_max, dt = 50, 0.01
+        t = np.arange(0, time_max + dt, dt)
+        omega = np.arange(0, 50 + dt, dt)
+        omega0 = np.sqrt(g/L)
+
+        Amp = ((omega**2 / L * np.cos(omega*t) * np.cos(self.theta) -
+            g/L * np.sin(self.theta)))
+
+        fig = plt.figure(figsize=(12, 4.5), dpi=80)
+        plt.plot(omega, Amp)
+
+
+        plt.show()
 
 
     def graph_output(self):
@@ -245,7 +311,8 @@ class harmonically_driven_pendulum:
 #----------- Run -----------
 harmonically_driven_pendulum = harmonically_driven_pendulum(L, omega, A, m, g)
 harmonically_driven_pendulum.differential_equation()
-harmonically_driven_pendulum.generate_plot()
+harmonically_driven_pendulum.show_plot()
+
 #harmonically_driven_pendulum.animate_plot(i)
 #harmonically_driven_pendulum.graph_output()
 #harmonically_driven_pendulum.init()

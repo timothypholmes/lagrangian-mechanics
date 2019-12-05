@@ -9,8 +9,8 @@ import time
 
 #------------ variables ----------------
 L = 1        
-omega = 1.5
-A = 0.9   
+omega = 3.13
+A = 0.1   
 m = 1        
 g = 9.81    
 
@@ -103,9 +103,9 @@ class rotational_pendulum:
             ax1.set_aspect('equal', adjustable='box')
 
 
-            x1_ring = self.x1
-            x2_ring = self.y1
-            ax1.plot(x1_ring, x2_ring, color='black', linewidth=0.1)
+            x1_ring = -R * np.sin(t)
+            x2_ring = -R * np.cos(t)
+            ax1.plot(x1_ring, x2_ring, color='black', linewidth=0.5)
 
             ax2.scatter(t[i], self.theta[i], lw=0.01, c='orange')
             ax2.set_xlabel(r'$t$')

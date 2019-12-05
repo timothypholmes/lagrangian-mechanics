@@ -21,7 +21,7 @@ time_max, dt = 40, 0.001
 t = np.arange(0, time_max + dt, dt)
 
 #------------ initial conditions --------
-y0 = [np.pi/2, 0]
+initial_q = [np.pi/2, 0]
 
 #------------ Animation values ----------
 fps = 10
@@ -57,9 +57,9 @@ class simple_pendulum:
         '''
 
 
-    def derivative(self, y, t, L, m, g):
+    def derivative(self, q, t, L, m, g):
         '''Returns the first derivatives of y'''
-        theta, thetadot = y 
+        theta, thetadot = q
 
         dtheta_dt = thetadot
         dthetadot_dt = -(g/L) * np.sin(theta)
@@ -67,34 +67,31 @@ class simple_pendulum:
         return dtheta_dt, dthetadot_dt
 
 
-    def differential_equation(self):
+    def coordinate_transformation(self):
         '''Returns a numerical solution to the differential equation'''
-        y = odeint(self.derivative, y0, t, args=(self.L, self.m, self.g))
+        q = odeint(self.derivative, initial_q, t, args=(self.L, self.m, self.g))
 
-        self.theta, self.thetadot = y[:,0], y[:,1]
+        self.theta, self.thetadot = q[:,0], q[:,1]
         self.x = L * np.sin(self.theta) 
         self.y = - L * np.cos(self.theta)
 
         return self.x, self.y, self.theta, self.thetadot
 
 
-    def animate_plot(self):
+    def show_plot(self):
         '''Animation of the plots and shows'''
         #----------- Set figure -----------
-        #fig = plt.figure(figsize=(12, 4.5), dpi=80)
-        #ax1 = fig.add_subplot(1,2,1)
-        #ax2 = fig.add_subplot(1,2,2)
         gs = gridspec.GridSpec(2, 2)
 
         fig = plt.figure(figsize=(10, 10), dpi=80)
-        ax1 = plt.subplot(gs[0, 0]) # row 0, col 0
+        ax1 = plt.subplot(gs[0, 0]) 
         plt.plot([0,1])
 
         
-        ax2 = plt.subplot(gs[0, 1]) # row 0, col 1
+        ax2 = plt.subplot(gs[0, 1]) 
         plt.plot([0,1])
 
-        ax3 = plt.subplot(gs[1, :]) # row 1, span all columns
+        ax3 = plt.subplot(gs[1, :]) 
         plt.plot([0,1])
 
         ax2.clear()
@@ -180,7 +177,7 @@ class simple_pendulum:
         self.ax2.set_ylim(min(self.theta) - 0.1, max(self.theta) + 0.1)
         
 
-    '''
+    
     def animate_plot(self, i):
         
 
@@ -197,7 +194,7 @@ class simple_pendulum:
         self.ax2.scatter(t[i], self.theta[i], lw=0.1, c='orange')
 
         #self.ax1.clear()  
-    '''
+    
 
     def create_animation(self):
         '''Save animation'''
@@ -216,9 +213,9 @@ class simple_pendulum:
 
 #----------- Run -----------
 simple_pendulum = simple_pendulum(L, m, g)
-simple_pendulum.differential_equation()
-#simple_pendulum.animate_plot()
-simple_pendulum.graph_output()
+simple_pendulum.coordinate_transformation()
+simple_pendulum.show_plot()
+#simple_pendulum.graph_output()
 #simple_pendulum.numerical_graph()
 #simple_pendulum.init()
 #simple_pendulum.create_animation()
