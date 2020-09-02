@@ -36,7 +36,7 @@ r = 0.05
 
 
 
-class double_pendulum:
+class multiple_double_pendulum:
     ''' '''
 
     def __init__(self, L1, L2, m1, m2, g):

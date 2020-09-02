@@ -33,7 +33,7 @@ frame_step = int(1/fps/dt)
 r = 0.05
 
 
-class simple_pendulum:
+class spring_pendulum:
     ''' '''
 
     def __init__(self, L, m, g):
