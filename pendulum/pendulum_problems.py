@@ -55,8 +55,6 @@ class simple_pendulum:
         self.g = g
 
 
-
-
     def derivative(self, q, t, L, m, g):
         '''Returns the first derivatives of y'''
         theta, thetadot = q
@@ -195,9 +193,9 @@ class simple_pendulum:
 
         #self.ax1.clear()  
     
-
+    '''
     def create_animation(self):
-        '''Save animation'''
+
 
         animate = animation.FuncAnimation(self.animation_fig, self.animate_plot,
             frames=2000, interval=1, repeat=False)
@@ -209,7 +207,7 @@ class simple_pendulum:
         writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
 
         animate.save('pendulum.mp4', writer=writer)
-
+    '''
 
 class rotational_pendulum:
     ''' '''
@@ -332,9 +330,9 @@ class rotational_pendulum:
 
         #self.ax1.clear()  
 
-
+    '''
     def create_animation(self):
-        '''Save animation'''
+
 
         animate = animation.FuncAnimation(self.animation_fig, self.animate_plot,
             frames=6000, interval=1, repeat=False)
@@ -346,6 +344,8 @@ class rotational_pendulum:
         writer = Writer(fps=45, metadata=dict(artist='Timothy Holmes'), bitrate=1800)
 
         animate.save('rotational-pendulum.mp4', writer=writer)
+    '''
+
 
 class spring_pendulum:
     ''' '''
@@ -735,9 +735,8 @@ class harmonically_driven_pendulum:
 
         #self.ax1.clear()  
     
-
+    '''
     def create_animation(self):
-        '''Save animation'''
 
         animate = animation.FuncAnimation(self.animation_fig, self.animate_plot,
             frames=2000, interval=1, repeat=False)
@@ -749,7 +748,7 @@ class harmonically_driven_pendulum:
         writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
 
         animate.save('pendulum.mp4', writer=writer)
-
+    '''
 
 
 class double_pendulum:
@@ -982,7 +981,7 @@ class double_pendulum:
         self.line3.set_ydata(self.theta1[:i])
         self.line4.set_ydata(self.theta2[:i])
 
-
+    '''
     def create_animation(self):
         '''Save animation'''
 
@@ -993,7 +992,7 @@ class double_pendulum:
         writer = Writer(fps=30, metadata=dict(artist='Timothy Holmes'), bitrate=1800)
 
         animate.save('./vid/double_pendulum.mp4', writer=writer)
-
+    '''
 
 
 class multiple_double_pendulum:
@@ -1317,7 +1316,8 @@ class multiple_double_pendulum:
         plt.legend(loc='upper right')
 
         plt.savefig('./img/compare_double_pen_1.png')
-    
+
+
     def init(self): 
         '''Set up animation'''
         gs = gridspec.GridSpec(2, 2)
@@ -1382,9 +1382,8 @@ class multiple_double_pendulum:
         self.line3.set_ydata(self.theta1[:i])
         self.line4.set_ydata(self.theta2[:i])
 
-
+    '''
     def create_animation(self):
-        '''Save animation'''
 
         animate = animation.FuncAnimation(self.animation_fig, self.animate_plot,
             frames=6000, interval=1, repeat=False)
@@ -1393,7 +1392,7 @@ class multiple_double_pendulum:
         writer = Writer(fps=30, metadata=dict(artist='Timothy Holmes'), bitrate=1800)
 
         animate.save('./vid/double_pendulum.mp4', writer=writer)
-
+    '''
 
 class visualize:
     
@@ -1404,7 +1403,7 @@ class visualize:
         #frames=None
         pass
 
-    def create_animation(self):
+    def create_animation(self, file_name, fps=None, frames=None, interval=None, bitrate=None):
         '''Save animation'''
 
         animate = animation.FuncAnimation(self.animation_fig, self.animate_plot,
