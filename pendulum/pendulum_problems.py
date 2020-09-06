@@ -1304,6 +1304,7 @@ class multiple_double_pendulum:
         '''
 
         fig5 = plt.figure(figsize=(8, 6), dpi=600)
+        
 
         plt.plot(t, self.theta11, color='maroon', label=r'$\theta_{1}$')
         plt.plot(t, self.theta12, color='navy', label=r'$\theta_{2}$')
@@ -1396,7 +1397,7 @@ class multiple_double_pendulum:
 
 class visualize:
     
-    def __init(self):
+    def __init__(self):
         #fps=None
         #bitrate=None
         #interval=None
@@ -1412,4 +1413,4 @@ class visualize:
         Writer = animation.writers['ffmpeg']
         writer = Writer(fps=30, metadata=dict(artist='Timothy Holmes'), bitrate=1800)
 
-        animate.save('./vid/double_pendulum.mp4', writer=writer)
+        animate.save('./vid/' + file_name + '.mp4', writer=writer)
